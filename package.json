@@ -1,14 +1,25 @@
 {
 	"name": "@diegomax/pagos360",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "TypeScript client for the Pagos360 API.",
 	"type": "module",
+	"author": "Diego Massanti <diego@massanti.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/DiegoMax/pagos360-ts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/DiegoMax/pagos360-ts/issues"
+	},
+	"homepage": "https://github.com/DiegoMax/pagos360-ts#readme",
 	"engines": {
 		"node": ">=22"
 	},
 	"files": [
 		"dist",
-		"README.md"
+		"README.md",
+		"LICENSE"
 	],
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -34,7 +45,6 @@
 		"typescript",
 		"argentina"
 	],
-	"license": "UNLICENSED",
 	"dependencies": {
 		"zod": "^3.25.28"
 	},
