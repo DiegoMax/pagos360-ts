@@ -12,6 +12,26 @@ export interface Pagos360ClientConfig {
 	timeoutMs?: number;
 }
 
+/**
+ * Channels que se pueden excluir del checkout de una Solicitud de Pago.
+ * Valores documentados por Pagos360; la API también acepta strings de
+ * canales nuevos que aún no estén listados acá (por ejemplo `qr`).
+ */
+export const PAGOS360_CHANNELS = {
+	creditCard: 'credit_card',
+	debitCard: 'debit_card',
+	nonBanking: 'non_banking',
+	banelcoPmc: 'banelco_pmc',
+	linkPagos: 'link_pagos',
+	debin: 'DEBIN',
+	wireTransfer: 'wire_transfer',
+	qr: 'qr'
+} as const;
+
+export type Pagos360Channel =
+	| (typeof PAGOS360_CHANNELS)[keyof typeof PAGOS360_CHANNELS]
+	| (string & {});
+
 export interface CreatePaymentRequestInput {
 	payerName: string;
 	description: string;
@@ -23,6 +43,7 @@ export interface CreatePaymentRequestInput {
 	backUrlRejected?: string;
 	payerEmail?: string;
 	metadata?: Record<string, unknown>;
+	excludedChannels?: Pagos360Channel[];
 }
 
 export type PaymentRequestState =

@@ -1,6 +1,6 @@
 {
 	"name": "@diegomax/pagos360",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "TypeScript client for the Pagos360 API.",
 	"type": "module",
 	"author": "Diego Massanti <diego@massanti.com>",

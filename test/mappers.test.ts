@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDueDate } from '../src/index.js';
+import { PAGOS360_CHANNELS, formatDueDate } from '../src/index.js';
+import { mapCreatePaymentRequestInput } from '../src/mappers/index.js';
 
 describe('formatDueDate', () => {
 	it('formats a Date as DD-MM-YYYY (UTC)', () => {
@@ -19,5 +20,52 @@ describe('formatDueDate', () => {
 
 	it('returns the raw string when it cannot parse', () => {
 		expect(formatDueDate('not-a-date')).toBe('not-a-date');
+	});
+});
+
+describe('mapCreatePaymentRequestInput', () => {
+	const baseInput = {
+		payerName: 'Juan Perez',
+		description: 'Pago de prueba',
+		firstTotal: 100,
+		firstDueDate: '27-01-2026'
+	};
+
+	it('maps excludedChannels to excluded_channels', () => {
+		const body = mapCreatePaymentRequestInput({
+			...baseInput,
+			excludedChannels: [PAGOS360_CHANNELS.creditCard, PAGOS360_CHANNELS.nonBanking]
+		});
+
+		expect(body).toEqual({
+			payment_request: {
+				payer_name: 'Juan Perez',
+				description: 'Pago de prueba',
+				first_total: 100,
+				first_due_date: '27-01-2026',
+				excluded_channels: ['credit_card', 'non_banking']
+			}
+		});
+	});
+
+	it('omits excluded_channels when not provided or empty', () => {
+		expect(mapCreatePaymentRequestInput(baseInput)).toEqual({
+			payment_request: {
+				payer_name: 'Juan Perez',
+				description: 'Pago de prueba',
+				first_total: 100,
+				first_due_date: '27-01-2026'
+			}
+		});
+		expect(
+			mapCreatePaymentRequestInput({ ...baseInput, excludedChannels: [] })
+		).toEqual({
+			payment_request: {
+				payer_name: 'Juan Perez',
+				description: 'Pago de prueba',
+				first_total: 100,
+				first_due_date: '27-01-2026'
+			}
+		});
 	});
 });

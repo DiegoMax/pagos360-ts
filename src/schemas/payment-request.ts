@@ -13,7 +13,8 @@ export const createPaymentRequestInputSchema = z.object({
 	backUrlPending: z.string().url().optional(),
 	backUrlRejected: z.string().url().optional(),
 	payerEmail: z.string().email().optional(),
-	metadata: z.record(z.unknown()).optional()
+	metadata: z.record(z.unknown()).optional(),
+	excludedChannels: z.array(z.string().trim().min(1)).optional()
 });
 
 export const paymentRequestWireSchema = z

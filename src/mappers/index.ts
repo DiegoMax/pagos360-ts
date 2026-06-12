@@ -64,6 +64,10 @@ export function mapCreatePaymentRequestInput(input: CreatePaymentRequestInput): 
 		body.metadata = input.metadata;
 	}
 
+	if (input.excludedChannels !== undefined && input.excludedChannels.length > 0) {
+		body.excluded_channels = input.excludedChannels;
+	}
+
 	return { payment_request: body };
 }
 

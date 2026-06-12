@@ -6,10 +6,12 @@ export {
 	Pagos360ResponseValidationError,
 	Pagos360ValidationError
 } from './errors/index.js';
+export { PAGOS360_CHANNELS } from './types/public.js';
 export type {
 	CreatePaymentRequestInput,
 	CreatePaymentRequestResponse,
 	FetchLike,
+	Pagos360Channel,
 	Pagos360Client,
 	Pagos360ClientConfig,
 	Pagos360Environment,
