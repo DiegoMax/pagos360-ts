@@ -52,7 +52,46 @@ Opciones:
 
 ### `client.createPaymentRequest(input)`
 
-`POST /payment-request`. Envía `{ payment_request: { payer_name, description, first_total, first_due_date, external_reference?, back_url_success?, back_url_pending?, back_url_rejected?, payer_email?, metadata? } }`. La fecha se serializa a `DD-MM-YYYY` (formato esperado por Pagos360).
+`POST /payment-request`. Envía `{ payment_request: { payer_name, description, first_total, first_due_date, external_reference?, back_url_success?, back_url_pending?, back_url_rejected?, payer_email?, metadata?, excluded_channels? } }`. La fecha se serializa a `DD-MM-YYYY` (formato esperado por Pagos360).
+
+#### Restringir medios de pago (`excludedChannels`)
+
+El checkout de Pagos360 muestra todos los canales habilitados en la cuenta. Para restringirlo, `excludedChannels` excluye los canales indicados (se envía como `excluded_channels`). Las constantes `PAGOS360_CHANNELS` cubren los canales conocidos:
+
+```ts
+import { PAGOS360_CHANNELS } from '@diegomax/pagos360';
+
+// Ejemplo: dejar solo el pago con QR.
+const payment = await client.createPaymentRequest({
+	// ...campos habituales...
+	payerName: 'Diego Massanti',
+	description: 'Pago factura 123',
+	firstTotal: 1234.56,
+	firstDueDate: new Date(Date.now() + 30 * 60_000),
+	excludedChannels: [
+		PAGOS360_CHANNELS.creditCard,
+		PAGOS360_CHANNELS.debitCard,
+		PAGOS360_CHANNELS.nonBanking,
+		PAGOS360_CHANNELS.banelcoPmc,
+		PAGOS360_CHANNELS.linkPagos,
+		PAGOS360_CHANNELS.debin,
+		PAGOS360_CHANNELS.wireTransfer
+	]
+});
+```
+
+| Constante                       | Valor enviado     | Canal                          |
+| ------------------------------- | ----------------- | ------------------------------ |
+| `PAGOS360_CHANNELS.creditCard`  | `credit_card`     | Tarjeta de crédito             |
+| `PAGOS360_CHANNELS.debitCard`   | `debit_card`      | Tarjeta de débito              |
+| `PAGOS360_CHANNELS.nonBanking`  | `non_banking`     | Efectivo (Rapipago/Pago Fácil) |
+| `PAGOS360_CHANNELS.banelcoPmc`  | `banelco_pmc`     | Pagos Mis Cuentas (Banelco)    |
+| `PAGOS360_CHANNELS.linkPagos`   | `link_pagos`      | Link Pagos                     |
+| `PAGOS360_CHANNELS.debin`       | `DEBIN`           | DEBIN                          |
+| `PAGOS360_CHANNELS.wireTransfer`| `wire_transfer`   | Transferencia                  |
+| `PAGOS360_CHANNELS.qr`          | `qr`              | Código QR                      |
+
+> Nota: la [documentación oficial](https://ayuda.pagos360.com/desarrolladores/API-crear-solicitud-de-pago) lista como excluibles `credit_card`, `debit_card`, `banelco_pmc`, `link_pagos`, `DEBIN`, `wire_transfer` y `non_banking`. `qr` no figura en esa lista, pero la API acepta strings de canales nuevos (el tipo `Pagos360Channel` admite cualquier `string`).
 
 ### `client.getPaymentRequest(id)`
 
